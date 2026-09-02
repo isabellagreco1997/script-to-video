@@ -26,7 +26,7 @@ assets (web images, article shots, clips) ────────┼──▶ b
 2. **Align**: whisper word timestamps. Every shot is anchored to a phrase, so re-recording the voice never breaks the sync.
 3. **Assets**: images the relevant Wikipedia articles actually use (licensed, with a manifest and an attributions file), article screenshots scrolled to the paragraph, video clips cut into frames, made cards and diagrams.
 4. **Timeline**: a tiny Python DSL. `tl.shot("the hinge", bg=tl.bg("hinge.jpg", kb="zin"))` means "when the narrator says *the hinge*, cut to this picture and slowly push in".
-5. **Render**: headless Chrome draws every frame deterministically from the timeline. Encode with ffmpeg. Audit on contact sheets, two frames per shot.
+5. **Render**: headless Chrome draws every frame deterministically from the timeline. Encode with ffmpeg. Audit on contact sheets: two frames per shot, plus a dense sheet with a frame every half second.
 
 ## Install
 
@@ -68,7 +68,9 @@ tl.shot("every shortcut", bg=tl.clip("gameplay2", kb="zout", fit="cover"))
 tl.write("work/timeline.js")
 ```
 
-* `shot(phrase)` starts a shot when the phrase is spoken and moves the cursor forward. `"a|b"` = alternatives for what whisper might have heard.
+* `shot(phrase, see="what the viewer should be looking at")` starts a shot when the phrase is spoken and moves the cursor forward. `"a|b"` = alternatives for what whisper might have heard. Writing `see=` for every shot *is* the shot plan: a thing → its photo, a mechanism → a diagram that changes state, a number → a counter, a claim → the article.
+* `tl.pic(src)` puts a **whole** image on screen, centred, sized from the file so nothing bleeds off the edge (`zoomTo` is capped to keep it inside). `tl.bg(src)` shows a whole still over a blurred copy of itself; `fit="cover"` only for wide photos and clips.
+* `tl.write()` reports word-slam share, shots over 8 s, missing anchors, order problems **and images used twice**. The build also writes a dense audit sheet (a frame every half second): watch that as a viewer would before showing anyone.
 * `tl.rel("word")` = seconds from the shot start to a word, for a layer's `in`. Elements appear on their word.
 * Backgrounds: `kb` = zin, zout, panL, panR, panD, panU, punch, still; `dark` dims; `fit` cover/contain; `flash=0` white flash on the cut.
 * Layers: `I` image (pop, slideU/D/L/R, fade, `zoomTo` + `origin` for a slow push), `T` white Impact word with black stroke, `C` black chip, `G` clip as a layer, `counter` counts up.

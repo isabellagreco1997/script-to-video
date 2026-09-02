@@ -16,6 +16,22 @@ Tools: `script_to_video/` (Python: Pillow, numpy; Kokoro TTS; whisper for word t
 * **Deliberate black** on reflective lines. Video ends on plain black. No outro card.
 * Music barely there (0.06–0.08), soft low booms only on flash cuts and black beats. No pops, no whooshes.
 
+## 0b. The human test (do this before the shot plan, it is the shot plan)
+
+This is for people, not for a model. A person watching has one question every second: *what am I looking at, and why?* Go through the script sentence by sentence and write, for each, what the viewer should **see**. Pass `see="..."` to `tl.shot()` so the plan prints with it.
+
+* **A thing** (a hinge, a console, a person) → a clear photo of that exact thing, whole, centred.
+* **A mechanism or a change** (the bolt slides, the pins lift, the map loops back) → a diagram, and show the **state change**: two or three frames of the same drawing (`latch_open` → `latch_closed`), not one static picture. If you can't find it, draw it in code; a plain drawing that explains beats a beautiful photo that doesn't.
+* **A number** → a counter or the number on screen. **A name** → the face and a chip. **A comparison** → both things side by side, same scale.
+* **A claim** ("nobody believed in it") → the source: the article, scrolled to the paragraph.
+* **A feeling / the thesis** → black, or the single word.
+* If the picture only makes sense *because* of the narration, it is the wrong picture. If a stranger could pause on it and guess the sentence, it is right.
+* Never show the same image twice. `tl.write()` reports reuse; treat every hit as a bug.
+* Whole images, centred, nothing bleeding off the edge: `tl.pic()` for layers, `tl.bg()` (contain + blurred backdrop) for full-frame stills. Use `fit="cover"` only for wide photos and clips that can lose their edges. Don't crop into a small image; a 600 px photo blown up to 1080p is a glitch.
+* A continuation (same image, next shot, new camera move) uses `anim="none"`. A fade or slide on an image that is already on screen reads as a flicker.
+* Text appears within a tenth of a second of its word, and it is big: slams ≥ 150 px, chips ≥ 56 px. A word the viewer can't read is worse than no word.
+* Watch it as a viewer, at speed, once, before showing anyone. The dense sheet (a frame every half second) catches what the two-per-shot audit misses: a pop-in that flashes, a diagram with its labels cut off, a photo held for five seconds.
+
 ## 1. Script
 
 Write for the ear: short sentences, one idea each, numbers as words, no parentheses. Spell out things the voice will fluff (`C L I`, `G P U`). Keep the tone dry and specific; a joke must survive with no music under it. End with the thesis, then stop. 150 words ≈ 1 minute.
@@ -53,10 +69,10 @@ tl.write("work/timeline.js")
 ```
 
 * **Two cursors.** `shot(phrase)` moves the search cursor forward (monotonic). `tl.at()` / `tl.rel()` look up from the current shot without moving it. Using one cursor for both once matched a repeated word 100 s later and froze two shots.
-* Layer `in` = seconds after the shot start; `tl.rel("word")` gives it. Elements appear on their word.
+* Layer `in` = seconds after the shot start; `tl.rel("word")` gives it. Elements appear on their word. `rel()` returns a marker that `shot()` resolves inside the shot it lands in (the layers are built before `shot()` runs, so a number computed early would be relative to the previous shot and the text lands a second late).
 * Camera moves: `kb` = zin / zout / panL / panR / panD / panU / punch / still. `zoomTo` + `origin` = slow push into a paragraph or a detail (never highlight boxes).
 * Text: white Impact, thick black stroke, ±2–4° rotation, pop-in with overshoot. Chips: plain black rectangle, white text, for names/dates/sources.
-* Clips: `tl.clip("name")` as background, `tl.G("name", x, y, w)` as a layer. Frames are pre-extracted, deterministic.
+* Clips: `tl.clip("name")` as background, `tl.G("name", x, y, w)` as a layer. Frames are pre-extracted, deterministic. A state sequence (open → closed) gets `"hold": true` in gifmeta so it plays once and stays on the last frame instead of looping.
 * `write()` prints the word-slam share, shots over 8 s, missing anchors and order problems. Fix all four before rendering.
 
 ## 6. Render, sound, encode, audit

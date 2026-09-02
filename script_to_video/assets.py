@@ -1,6 +1,6 @@
 """Assets: Wikimedia Commons images with licences, text/terminal cards, clips → frames, gifmeta, page captures."""
 from __future__ import annotations
-import json, os, re, subprocess, shutil, glob
+import json, os, re, subprocess, shutil, glob, time
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
@@ -62,12 +62,19 @@ def wikipedia_images(article: str, out_dir: str, manifest: str, limit: int = 10,
         md = ii.get("extmetadata", {}); url = ii.get("thumburl") or ii.get("url")
         name = f"{prefix}{re.sub(r'[^A-Za-z0-9]+', '_', title.replace('File:', ''))[:48]}.png"
         path = str(Path(out_dir) / name)
-        subprocess.run(["curl", "-s", "-L", "-A", UA, "-o", path, url], check=True)
-        try:
-            im = Image.open(path).convert("RGBA")
-            if im.width < 300 or im.height < 200: os.remove(path); continue
-            bg = Image.new("RGBA", im.size, (247, 244, 236, 255)); bg.alpha_composite(im); bg.convert("RGB").save(path)   # SVG/PNG alpha → light card
-        except Exception: continue
+        ok = False
+        for attempt in range(3):                                                   # Wikimedia rate-limits bursts (429 → an HTML page saved as .png)
+            subprocess.run(["curl", "-s", "-L", "-A", UA, "-o", path, url], check=True)
+            try:
+                im = Image.open(path).convert("RGBA"); ok = True; break
+            except Exception:
+                time.sleep(2 + 3 * attempt)
+        if not ok:
+            if os.path.exists(path): os.remove(path)
+            print("  skipped (not an image):", title); continue
+        if im.width < 300 or im.height < 200: os.remove(path); continue
+        bg = Image.new("RGBA", im.size, (247, 244, 236, 255)); bg.alpha_composite(im); bg.convert("RGB").save(path)   # SVG/PNG alpha → light card
+        time.sleep(0.4)                                                            # be polite to the API
         m.append(dict(file=name, article=article, title=title, url=url, page=ii.get("descriptionurl"),
                       license=md.get("LicenseShortName", {}).get("value", "?"), artist=md.get("Artist", {}).get("value", "?")))
         out.append(path); print("  +", name, "|", md.get("LicenseShortName", {}).get("value", "?"))

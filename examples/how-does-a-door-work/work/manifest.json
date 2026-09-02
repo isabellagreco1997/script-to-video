@@ -162,5 +162,19 @@
   "page": "https://commons.wikimedia.org/wiki/File:Pin_tumbler_with_key.svg",
   "license": "CC BY-SA 3.0",
   "artist": "<div style=\"display:inline-block;padding:0 3px;background-color:#CCF\">Original:</div> <div style=\"display:inline-block;padding:3px 0;\"><a href=\"https://en.wikipedia.org/wiki/User:Wapcaplet\" class=\"extiw\" title=\"en:User:Wapcaplet\">Wapcaplet</a></div>\u2002<div style=\"display:inline-block;padding:0 3px;background-color:#CCF\">Vector: </div> <div style=\"display:inline-block;\"><a href=\"//commons.wikimedia.org/wiki/User:Pbroks13\" title=\"User:Pbroks13\">Pbroks13</a></div>"
+ },
+ {
+  "file": "pin_bad_key.png",
+  "title": "File:Pin tumbler bad key.svg",
+  "page": "https://commons.wikimedia.org/wiki/File:Pin_tumbler_bad_key.svg",
+  "license": "CC BY-SA 3.0",
+  "artist": "<div style=\"display:inline-block;padding:0 3px;background-color:#CCF\">Original:</div> <div style=\"display:inline-block;padding:3px 0;\"><a href=\"https://en.wikipedia.org/wiki/User:Wapcaplet\" class=\"extiw\" title=\"en:User:Wapcaplet\">Wapcaplet</a></div>\u2002<div style=\"display:inline-block;padding:0 3px;background-color:#CCF\">Vector: </div> <div style=\"display:inline-block;\"><a href=\"//commons.wikimedia.org/wiki/User:Pbroks13\" title=\"User:Pbroks13\">Pbroks13</a></div>"
+ },
+ {
+  "file": "assets/handle.jpg",
+  "title": "File:Door Handle.JPG",
+  "license": "CC BY-SA 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Door_Handle.JPG",
+  "article": "Door handle"
  }
 ]

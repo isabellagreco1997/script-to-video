@@ -80,15 +80,24 @@ def encode(work: str, narration_mp3: str, out_mp4: str, music: str | None = None
     subprocess.run(cmd, check=True); print("encoded", out_mp4); return out_mp4
 
 
-def audit(work: str, out_prefix: str, cols: int = 5):
-    """Contact sheets: 2 frames per shot (25% and 75%), labelled with shot index and start time."""
+def audit(work: str, out_prefix: str, cols: int = 5, every: float | None = None):
+    """Contact sheets. Default: 2 frames per shot (25% and 75%), labelled with shot index and start time.
+    every=0.5 → a frame every half second instead (the "watch it as a viewer" sheet: catches pop-in flashes,
+    cut-off labels, images held too long)."""
     S = shots(work); frames = Path(work) / "render_frames"; cells = []
-    for i, s in enumerate(S):
-        for q in (0.25, 0.75):
-            f = int((s["t0"] + (s["t1"] - s["t0"]) * q) * 30); p = frames / f"f{f:05d}.jpg"
-            if p.exists(): cells.append((f"{i:02d} {s['t0']:.1f}s", p))
+    if every:
+        dur = max(s["t1"] for s in S); t = 0.0
+        while t < dur:
+            p = frames / f"f{int(t * 30):05d}.jpg"
+            if p.exists(): cells.append((f"{t:.1f}s", p))
+            t += every
+    else:
+        for i, s in enumerate(S):
+            for q in (0.25, 0.75):
+                f = int((s["t0"] + (s["t1"] - s["t0"]) * q) * 30); p = frames / f"f{f:05d}.jpg"
+                if p.exists(): cells.append((f"{i:02d} {s['t0']:.1f}s", p))
     im0 = Image.open(cells[0][1]); k = 384 / im0.width; cw, ch = 384, int(im0.height * k) + 22
-    per = cols * 8; sheets = []
+    per = cols * (12 if every else 8); sheets = []
     for page in range(0, len(cells), per):
         chunk = cells[page:page + per]; rows = (len(chunk) + cols - 1) // cols
         sheet = Image.new("RGB", (cols * cw, rows * ch), (20, 20, 20)); d = ImageDraw.Draw(sheet)

@@ -12,6 +12,7 @@ current shot's anchor without moving it (for layer `in` times). "a|b" = transcri
 from __future__ import annotations
 import json, re
 from pathlib import Path
+from PIL import Image
 
 
 class Timeline:
@@ -22,6 +23,7 @@ class Timeline:
         self.w, self.h, self.pos, self.missing, self.S = w, h, 0, [], []
         self.end = round(self.W[-1][2] + tail, 2)
         self.A = assets
+        self.work = Path(words_json).resolve().parent     # image sizes are read from here for pic()
 
     # ---------- lookup
     def _find(self, phrase, start):
@@ -40,9 +42,11 @@ class Timeline:
         if i is None: self.missing.append(phrase); i = min(self.pos + 3, len(self.W) - 1)
         return round(self.W[i][1] + off, 2)
 
-    def rel(self, phrase: str) -> float:
-        """seconds from the current shot's anchor to a phrase — the usual value for a layer's `in`."""
-        return round(self.at(phrase) - self.W[self.pos][1], 2)
+    def rel(self, phrase: str) -> str:
+        """a layer `in` that means "when this phrase is spoken, inside THIS shot". Returns a marker that shot()
+        resolves against the shot it ends up in (Python evaluates the layers before shot() runs, so a number
+        computed here would be relative to the previous shot: text a second late)."""
+        return "@" + phrase
 
     # ---------- layers
     def T(self, text, x, y, fs=150, rot=0, i=0.0, **k): return dict(type="text", text=text, x=x, y=y, fs=fs, rot=rot, **{"in": i}, **k)
@@ -52,13 +56,30 @@ class Timeline:
         return src if src.startswith(("assets/", "gifs/", "gifframes/", "/", "http")) else self.A + src
 
     def I(self, src, x, y, w, i=0.0, **k): return dict(type="img", src=self._src(src), x=x, y=y, w=w, **{"in": i}, **k)
+
+    def pic(self, src, i=0.0, safe=0.86, anim="slideU", plain=True, cx=None, cy=None, zoomTo=None, origin="50% 50%", **k):
+        """A WHOLE image, centred, fitted inside `safe` × the stage so nothing bleeds off the edges.
+        Size is computed from the file, so wide diagrams and tall pages both fit. zoomTo is capped so it stays inside."""
+        path = self.work / self._src(src)
+        iw, ih = Image.open(path).size
+        maxw, maxh = self.w * safe, self.h * safe
+        k_ = min(maxw / iw, maxh / ih); w, h = int(iw * k_), int(ih * k_)
+        x = int((self.w - w) / 2 if cx is None else cx - w / 2); y = int((self.h - h) / 2 if cy is None else cy - h / 2)
+        d = dict(type="img", src=self._src(src), x=x, y=y, w=w, plain=plain, anim=anim, **{"in": i}, **k)
+        if zoomTo:
+            d["zoomTo"] = min(zoomTo, 1 / safe * 1.35); d["origin"] = origin
+        return d
     def G(self, name, x, y, w, i=0.0, **k): return dict(type="img", src=f"gifs/{name}.gif", x=x, y=y, w=w, plain=True, **{"in": i}, **k)
-    def bg(self, src, kb="zin", dark=0.0, fit="cover", shake=False): return dict(src=self._src(src), kb=kb, dark=dark, fit=fit, shake=shake)
+    def bg(self, src, kb="zin", dark=0.0, fit="contain", shake=False, blur=True):
+        """Full-frame background. fit='contain' (default) shows the WHOLE image centred over a blurred copy of itself;
+        use fit='cover' only for wide photos/clips that can lose their edges."""
+        return dict(src=self._src(src), kb=kb, dark=dark, fit=fit, shake=shake, blur=blur)
     def clip(self, name, kb="zin", dark=0.0, fit="contain"): return dict(src=f"gifs/{name}.gif", kb=kb, dark=dark, fit=fit)
 
     # ---------- shots
-    def shot(self, anchor, off: float = 0.0, **sh):
-        """anchor: phrase (moves the cursor) or a float time."""
+    def shot(self, anchor, off: float = 0.0, see: str | None = None, **sh):
+        """anchor: phrase (moves the cursor) or a float time. see: what the viewer should SEE here (printed in the plan)."""
+        if see: sh["see"] = see
         if isinstance(anchor, (int, float)):
             t0 = float(anchor)
         else:
@@ -66,6 +87,12 @@ class Timeline:
             if i is None: i = self._find(anchor, 0)
             if i is None: self.missing.append(anchor); i = min(self.pos + 3, len(self.W) - 1)
             self.pos = i; t0 = round(self.W[i][1] + off, 2)
+        for L in sh.get("layers") or []:                       # resolve "@phrase" ins relative to this shot
+            v = L.get("in")
+            if isinstance(v, str) and v.startswith("@"):
+                j = self._find(v[1:], self.pos)
+                if j is None: self.missing.append(v[1:]); L["in"] = 0.0
+                else: L["in"] = round(max(0.0, self.W[j][1] - t0), 2)
         self.S.append([t0, sh])
         return t0
 
@@ -85,7 +112,15 @@ class Timeline:
                      if any(l.get("type") == "text" for l in sh.get("layers", [])))
         long = [(i, round((self.S[i + 1][0] if i + 1 < len(self.S) else self.end) - t0, 1)) for i, (t0, _) in enumerate(self.S)
                 if (self.S[i + 1][0] if i + 1 < len(self.S) else self.end) - t0 > 8]
+        # reuse check: the same image twice is a smell (one image per idea)
+        used = {}
+        for i, (t0, sh) in enumerate(self.S):
+            for src in ([sh["bg"]["src"]] if sh.get("bg") else []) + [l.get("src") for l in sh.get("layers", []) if l.get("src")]:
+                if src and not src.startswith("gifs/"): used.setdefault(src, []).append(i)
+        # a continuation (same image in the very next shot, different move) is fine; a comeback later is not
+        reused = {k: v for k, v in used.items() if any(b - a > 1 for a, b in zip(v, v[1:]))}
         print(f"timeline: {len(self.S)} shots, {self.end}s, word slams {100 * text_t / self.end:.0f}% of runtime (aim ≤10%)")
+        if reused: print("  REUSED images:", {k.split('/')[-1]: v for k, v in reused.items()})
         if long: print("  shots over 8 s:", long)
         if self.missing: print("  MISSING anchors:", self.missing)
         for p in problems: print("  ORDER:", p)

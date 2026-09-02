@@ -25,7 +25,7 @@ def main(argv=None):
     a = sub.add_parser("render"); a.add_argument("work"); a.add_argument("--start", type=int); a.add_argument("--end", type=int); a.add_argument("--port", type=int)
     a = sub.add_parser("sfx"); a.add_argument("work")
     a = sub.add_parser("encode"); a.add_argument("work"); a.add_argument("narration_mp3"); a.add_argument("out_mp4"); a.add_argument("--music"); a.add_argument("--music-vol", type=float, default=0.07); a.add_argument("--sfx")
-    a = sub.add_parser("audit"); a.add_argument("work"); a.add_argument("out_prefix")
+    a = sub.add_parser("audit"); a.add_argument("work"); a.add_argument("out_prefix"); a.add_argument("--every", type=float, help="seconds between frames (e.g. 0.5) instead of 2 per shot")
     a = sub.add_parser("build"); a.add_argument("build_py")
     args = p.parse_args(argv)
 
@@ -37,12 +37,12 @@ def main(argv=None):
     elif args.cmd == "render": P.render(args.work, args.start, args.end, args.port)
     elif args.cmd == "sfx": P.sfx(args.work)
     elif args.cmd == "encode": P.encode(args.work, args.narration_mp3, args.out_mp4, args.music, args.music_vol, args.sfx)
-    elif args.cmd == "audit": P.audit(args.work, args.out_prefix)
+    elif args.cmd == "audit": P.audit(args.work, args.out_prefix, every=args.every)
     elif args.cmd == "build":
         g = runpy.run_path(args.build_py, run_name="__main__"); b = g.get("BUILD")
         if not b: raise SystemExit("build.py must define BUILD = dict(work=, narration=, out=, music=None)")
         P.render(b["work"]); s = P.sfx(b["work"]); P.encode(b["work"], b["narration"], b["out"], b.get("music"), b.get("music_vol", 0.07), s)
-        P.audit(b["work"], str(Path(b["out"]).with_suffix("")) + "_audit")
+        P.audit(b["work"], str(Path(b["out"]).with_suffix("")) + "_audit"); P.audit(b["work"], str(Path(b["out"]).with_suffix("")) + "_dense", every=0.5)
 
 
 if __name__ == "__main__":

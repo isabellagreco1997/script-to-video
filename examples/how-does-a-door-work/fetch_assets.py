@@ -17,17 +17,15 @@ PICS = {  # file: (commons query, which result)
     "pivot_socket.jpg": ("pivot door socket ancient stone", 0),
     "pantheon_door.jpg": ("Pantheon bronze doors Rome", 0),
     "latch.jpg": ("door latch bolt", 0),
-    "strike_plate.jpg": ("strike plate door", 0),
     "medieval_latch.jpg": ("medieval iron door latch", 0),
-    "pin_tumbler.jpg": ("pin tumbler lock diagram", 0),
     "pin_tumbler_key.jpg": ("pin tumbler lock with key inserted", 0),
     "yale.jpg": ("Linus Yale Jr.", 0),
     "yale_patent.jpg": ("Yale lock patent drawing", 0),
-    "front_door.jpg": ("front door house entrance", 0),
     "walking_through_door.jpg": ("person walking through doorway", 0),
 }
 for f, (q, pick) in PICS.items():
     assets.commons_fetch(q, str(A / f), M, pick=pick)
+assets.commons_file("File:Door Handle.JPG", str(A / "handle.jpg"), M)          # a lever handle, from the Door handle article
 assets.attributions(M, str(HERE / "work/attributions.txt"))
 
 assets.capture([
