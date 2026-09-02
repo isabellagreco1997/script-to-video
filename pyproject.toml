@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "script-to-video"
+version = "0.1.0"
+description = "Turn a script into a narrated, word-synced explainer video (16:9 or 9:16) with a free local voice and browser-rendered motion."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+dependencies = ["pillow>=10", "numpy>=1.24", "kokoro-onnx>=0.4", "soundfile>=0.12"]
+keywords = ["video", "explainer", "text-to-video", "script-to-video", "tts", "kokoro", "youtube", "reels", "shorts", "faceless-video"]
+
+[project.optional-dependencies]
+apple = ["mlx-whisper"]
+whisper = ["faster-whisper"]
+
+[project.urls]
+Homepage = "https://github.com/isabellagreco1997/script-to-video"
+
+[project.scripts]
+script-to-video = "script_to_video.cli:main"
+
+[tool.setuptools]
+packages = ["script_to_video"]

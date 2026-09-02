@@ -1,0 +1,2 @@
+[console_scripts]
+script-to-video = script_to_video.cli:main

@@ -1,0 +1,17 @@
+A door is a hole in a wall with an opinion.
+
+Every door has to solve the same three problems. It has to swing. It has to stay shut. And it has to open only for the right people. That's a hinge, a latch, and a lock.
+
+Start with the hinge. Two leaves, a pin, and a barrel. The leaves screw into the door and the frame, and the pin lets them rotate around one line. That line is everything. If it's a millimetre off vertical, the door either swings open by itself or refuses to stay open. Which is why old doors drift.
+
+Before hinges, doors pivoted. A peg at the top and the bottom, sitting in a socket cut into the stone. The Romans had them. Some were solid bronze and weighed more than a car.
+
+Then the latch. A bar that drops into a keeper. Push the door, and the angled face of the bolt slides over the strike plate. A spring shoves it back into the hole, and the door is shut. The handle just pulls the bolt out again. That is the entire mechanism, and it has barely changed since the middle ages.
+
+The lock is where it gets clever. A pin tumbler lock is a row of tiny pins, each one cut in two at a different height. With no key, the pins straddle the gap between the plug and the housing, and nothing turns. The right key lifts every pin so that its cut sits exactly on that gap, the shear line, and the plug is free to rotate. That's it. A lock is a shape test.
+
+Linus Yale patented that in 1861, and the lock on your front door is essentially his drawing.
+
+So a door is a rotation, a spring, and a shape test. Three ideas, nine centuries, and you use them about a hundred times a day without looking.
+
+Next time you walk through one, look.
