@@ -35,8 +35,17 @@ def _model():
 DEFAULT_SAY = {"CLI": "C L I", "GPU": "G P U", "API": "A P I", "UI": "U I", "URL": "U R L", "SKILL.md": "skill dot M D"}
 
 
-def synthesize(script_path: str, out_wav: str, voice: str = "am_puck", speed: float = 1.0, say: dict | None = None,
-               sentence_gap: float = 0.28, paragraph_gap: float = 0.55):
+def trim_silence(a: np.ndarray, sr: int, thresh: float = 0.012, keep: float = 0.03) -> np.ndarray:
+    """cut the dead air Kokoro leaves before and after every sentence (keeps `keep` seconds each side)."""
+    loud = np.flatnonzero(np.abs(a) > thresh)
+    if len(loud) == 0: return a
+    k = int(sr * keep); return a[max(0, loud[0] - k): min(len(a), loud[-1] + k)]
+
+
+def synthesize(script_path: str, out_wav: str, voice: str = "am_puck", speed: float = 1.06, say: dict | None = None,
+               sentence_gap: float = 0.12, paragraph_gap: float = 0.30):
+    """Tempo defaults are deliberately tight: no dead air between sentences, slightly faster than Kokoro's natural
+    pace. A fast-paced clip is the point; loosen the gaps for a calm documentary voice."""
     text = Path(script_path).read_text()
     subs = dict(DEFAULT_SAY); subs.update(say or {})
     for k, v in subs.items():
@@ -46,7 +55,7 @@ def synthesize(script_path: str, out_wav: str, voice: str = "am_puck", speed: fl
     for pi, para in enumerate(paras):
         for s in [s.strip() for s in re.split(r"(?<=[.!?:])\s+", para) if s.strip()]:
             samples, sr = m.create(s, voice=voice, speed=speed, lang="en-us")
-            parts.append(np.asarray(samples, np.float32)); parts.append(np.zeros(int(sr * sentence_gap), np.float32))
+            parts.append(trim_silence(np.asarray(samples, np.float32), sr)); parts.append(np.zeros(int(sr * sentence_gap), np.float32))
         parts.append(np.zeros(int(sr * paragraph_gap), np.float32))
         print(f"  para {pi + 1}/{len(paras)}", flush=True)
     audio = np.concatenate(parts); audio = audio / max(1e-6, np.abs(audio).max()) * 0.9

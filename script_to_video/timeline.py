@@ -87,7 +87,12 @@ class Timeline:
             if i is None: i = self._find(anchor, 0)
             if i is None: self.missing.append(anchor); i = min(self.pos + 3, len(self.W) - 1)
             self.pos = i; t0 = round(self.W[i][1] + off, 2)
-        for L in sh.get("layers") or []:                       # resolve "@phrase" ins relative to this shot
+        backdrop = sh.pop("backdrop", True)
+        lys = sh.get("layers") or []
+        if backdrop and "bg" not in sh and lys and lys[0].get("type") == "img" and not lys[0].get("in"):
+            # an image-only shot: put the same image, blurred, behind it from frame one so the cut never drops to black
+            sh["bg"] = dict(src=lys[0]["src"], kb="still", dark=0.0, fit="contain", blur=True, backdropOnly=True)
+        for L in lys:                                          # resolve "@phrase" ins relative to this shot
             v = L.get("in")
             if isinstance(v, str) and v.startswith("@"):
                 j = self._find(v[1:], self.pos)
@@ -116,7 +121,7 @@ class Timeline:
         used = {}
         for i, (t0, sh) in enumerate(self.S):
             for src in ([sh["bg"]["src"]] if sh.get("bg") else []) + [l.get("src") for l in sh.get("layers", []) if l.get("src")]:
-                if src and not src.startswith("gifs/"): used.setdefault(src, []).append(i)
+                if src and not src.startswith("gifs/") and i not in used.setdefault(src, []): used[src].append(i)
         # a continuation (same image in the very next shot, different move) is fine; a comeback later is not
         reused = {k: v for k, v in used.items() if any(b - a > 1 for a, b in zip(v, v[1:]))}
         print(f"timeline: {len(self.S)} shots, {self.end}s, word slams {100 * text_t / self.end:.0f}% of runtime (aim ≤10%)")

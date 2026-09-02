@@ -1,7 +1,7 @@
 """script-to-video CLI
 
   script-to-video setup                                   # download the Kokoro voice model (once)
-  script-to-video voice  script.txt work/narration.wav --voice am_puck [--speed 1.0] [--say "CLI=C L I"]
+  script-to-video voice  script.txt work/narration.wav --voice am_puck [--speed 1.06] [--gap 0.12] [--say "CLI=C L I"]
   script-to-video align  work/narration16.wav work/       # → work/words.json + work/sentences.txt
   script-to-video timeline build.py                       # runs your shot script (it writes work/timeline.js)
   script-to-video render work/ [--start F --end F]        # frames → work/render_frames
@@ -19,7 +19,7 @@ from . import voice as V, align as AL, pipeline as P
 def main(argv=None):
     p = argparse.ArgumentParser(prog="script-to-video"); sub = p.add_subparsers(dest="cmd", required=True)
     sub.add_parser("setup")
-    a = sub.add_parser("voice"); a.add_argument("script"); a.add_argument("out_wav"); a.add_argument("--voice", default="am_puck"); a.add_argument("--speed", type=float, default=1.0); a.add_argument("--say", action="append", default=[])
+    a = sub.add_parser("voice"); a.add_argument("script"); a.add_argument("out_wav"); a.add_argument("--voice", default="am_puck"); a.add_argument("--speed", type=float, default=1.06); a.add_argument("--gap", type=float, default=0.12, help="silence between sentences (s)"); a.add_argument("--pgap", type=float, default=0.30, help="silence between paragraphs (s)"); a.add_argument("--say", action="append", default=[])
     a = sub.add_parser("align"); a.add_argument("wav16"); a.add_argument("work"); a.add_argument("--model", default="small")
     a = sub.add_parser("timeline"); a.add_argument("build_py")
     a = sub.add_parser("render"); a.add_argument("work"); a.add_argument("--start", type=int); a.add_argument("--end", type=int); a.add_argument("--port", type=int)
@@ -31,7 +31,7 @@ def main(argv=None):
 
     if args.cmd == "setup": V.setup()
     elif args.cmd == "voice":
-        say = dict(s.split("=", 1) for s in args.say); V.synthesize(args.script, args.out_wav, voice=args.voice, speed=args.speed, say=say)
+        say = dict(s.split("=", 1) for s in args.say); V.synthesize(args.script, args.out_wav, voice=args.voice, speed=args.speed, say=say, sentence_gap=args.gap, paragraph_gap=args.pgap)
     elif args.cmd == "align": AL.align(args.wav16, args.work, model=args.model)
     elif args.cmd == "timeline": runpy.run_path(args.build_py, run_name="__main__")
     elif args.cmd == "render": P.render(args.work, args.start, args.end, args.port)

@@ -8,8 +8,8 @@ It also ships as a **Claude Code skill** (`SKILL.md`): drop the folder in `~/.cl
 
 <table align="center">
   <tr>
-    <td align="center" width="62%"><a href="https://github.com/isabellagreco1997/script-to-video/releases/download/examples-v2/how-does-a-door-work.mp4"><img src="examples/how-does-a-door-work/out/preview.gif" width="100%"></a><br><b>How does a door work</b> · 16:9 · 1:49 · <a href="https://github.com/isabellagreco1997/script-to-video/releases/download/examples-v2/how-does-a-door-work.mp4">▶ watch the full video</a><br><sub>Wikipedia images + article screenshots + diagrams drawn in code, male Kokoro voice</sub></td>
-    <td align="center" width="38%"><a href="https://github.com/isabellagreco1997/script-to-video/releases/download/examples-v2/dark-souls-story-916.mp4"><img src="examples/dark-souls-story-916/out/preview.gif" width="100%"></a><br><b>The story of Dark Souls</b> · 9:16 · 0:58 · <a href="https://github.com/isabellagreco1997/script-to-video/releases/download/examples-v2/dark-souls-story-916.mp4">▶ watch the full video</a><br><sub>trailer clips + article captures + a counter, same voice</sub></td>
+    <td align="center" width="62%"><a href="https://github.com/isabellagreco1997/script-to-video/releases/download/examples-v2/how-does-a-door-work.mp4"><img src="examples/how-does-a-door-work/out/preview.gif" width="100%"></a><br><b>How does a door work</b> · 16:9 · 1:30 · <a href="https://github.com/isabellagreco1997/script-to-video/releases/download/examples-v2/how-does-a-door-work.mp4">▶ watch the full video</a><br><sub>Wikipedia images + article screenshots + diagrams drawn in code, male Kokoro voice</sub></td>
+    <td align="center" width="38%"><a href="https://github.com/isabellagreco1997/script-to-video/releases/download/examples-v2/dark-souls-story-916.mp4"><img src="examples/dark-souls-story-916/out/preview.gif" width="100%"></a><br><b>The story of Dark Souls</b> · 9:16 · 0:48 · <a href="https://github.com/isabellagreco1997/script-to-video/releases/download/examples-v2/dark-souls-story-916.mp4">▶ watch the full video</a><br><sub>trailer clips + article captures + a counter, same voice</sub></td>
   </tr>
 </table>
 
@@ -26,7 +26,7 @@ assets (web images, article shots, clips) ────────┼──▶ b
                                                                 └──audit──▶ contact sheets
 ```
 
-1. **Voice**: Kokoro TTS, sentence by sentence with natural gaps. Any recorded narration works too.
+1. **Voice**: Kokoro TTS, sentence by sentence, dead air trimmed and gaps tightened so the clip moves (tempo is part of the edit). Any recorded narration works too.
 2. **Align**: whisper word timestamps. Every shot is anchored to a phrase, so re-recording the voice never breaks the sync.
 3. **Assets**: images the relevant Wikipedia articles actually use (licensed, with a manifest and an attributions file), article screenshots scrolled to the paragraph, video clips cut into frames, made cards and diagrams.
 4. **Timeline**: a tiny Python DSL. `tl.shot("the hinge", bg=tl.bg("hinge.jpg", kb="zin"))` means "when the narrator says *the hinge*, cut to this picture and slowly push in".
@@ -74,6 +74,7 @@ tl.write("work/timeline.js")
 
 * `shot(phrase, see="what the viewer should be looking at")` starts a shot when the phrase is spoken and moves the cursor forward. `"a|b"` = alternatives for what whisper might have heard. Writing `see=` for every shot *is* the shot plan: a thing → its photo, a mechanism → a diagram that changes state, a number → a counter, a claim → the article.
 * `tl.pic(src)` puts a **whole** image on screen, centred, sized from the file so nothing bleeds off the edge (`zoomTo` is capped to keep it inside). `tl.bg(src)` shows a whole still over a blurred copy of itself; `fit="cover"` only for wide photos and clips.
+* Image-only shots get their own blurred copy as a backdrop from the first frame, so a cut never drops to black (`backdrop=False` to opt out).
 * `tl.write()` reports word-slam share, shots over 8 s, missing anchors, order problems **and images used twice**. The build also writes a dense audit sheet (a frame every half second): watch that as a viewer would before showing anyone.
 * `tl.rel("word")` = seconds from the shot start to a word, for a layer's `in`. Elements appear on their word.
 * Backgrounds: `kb` = zin, zout, panL, panR, panD, panU, punch, still; `dark` dims; `fit` cover/contain; `flash=0` white flash on the cut.
@@ -108,8 +109,8 @@ Written in full in [`SKILL.md`](SKILL.md). The short version:
 
 ## Examples
 
-* [`examples/how-does-a-door-work/`](examples/how-does-a-door-work) — 16:9, 1:49. Hinge, latch, pin tumbler lock, Linus Yale. Every picture from Wikipedia/Commons with the licence in `work/attributions.txt`.
-* [`examples/dark-souls-story-916/`](examples/dark-souls-story-916) — 9:16, 0:58. Trailer clips via yt-dlp, article captures reflowed at phone width, a live counter, a "YOU DIED" card drawn in code.
+* [`examples/how-does-a-door-work/`](examples/how-does-a-door-work) — 16:9, 1:30. Hinge, latch, pin tumbler lock, Linus Yale. Every picture from Wikipedia/Commons with the licence in `work/attributions.txt`.
+* [`examples/dark-souls-story-916/`](examples/dark-souls-story-916) — 9:16, 0:48. Trailer clips via yt-dlp, article captures reflowed at phone width, a live counter, a "YOU DIED" card drawn in code.
 
 Run either with `python examples/<name>/fetch_assets.py` then `script-to-video build examples/<name>/build.py`.
 

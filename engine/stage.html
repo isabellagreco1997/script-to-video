@@ -48,7 +48,8 @@ function buildShot(si){
   const sh = TL[si];
   lysEl.innerHTML = ""; layerEls = [];
   if (sh.bg){ bgEl.src = sh.bg.src; bgEl.style.display=""; bgEl.style.objectFit = sh.bg.fit||"cover"; bgEl.style.background="transparent"; darkEl.style.opacity = sh.bg.dark||0;
-    const blur = (sh.bg.fit==="contain") && sh.bg.blur!==false; bgBlur.style.display = blur ? "" : "none"; if (blur) bgBlur.src = sh.bg.src; }
+    const blur = (sh.bg.fit==="contain") && sh.bg.blur!==false; bgBlur.style.display = blur ? "" : "none"; if (blur) bgBlur.src = sh.bg.src;
+    bgEl.style.visibility = sh.bg.backdropOnly ? "hidden" : ""; }
   else { bgEl.style.display="none"; bgBlur.style.display="none"; darkEl.style.opacity=0; }
   for (const L of (sh.layers||[])){
     let el;
@@ -86,7 +87,7 @@ function render(t){
   flashEl.style.opacity = sh.flash!==undefined ? clamp(1-(lt-sh.flash)/0.09,0,1)*(lt>=sh.flash?1:0) : 0;
   (sh.layers||[]).forEach((L,i)=>{
     const el = layerEls[i]; if(!el) return;
-    const tin = L.in||0, d = L.d||(L.type==="text"||L.type==="chip" ? 0.3 : 0.42);
+    const tin = L.in||0, d = L.d||(L.type==="text"||L.type==="chip" ? 0.3 : 0.3);
     let p = clamp((lt-tin)/d,0,1);
     if (lt < tin || (L.out!==undefined && lt >= L.out)){ el.style.opacity=0; return; }
     el.style.opacity = 1;
@@ -101,8 +102,8 @@ function render(t){
       el.style.transform = `rotate(${rot}deg) scale(${1+(L.zoomTo-1)*zp})`;
       if (p<1 && anim!=="none") el.style.opacity = p; return; }
     if (anim==="pop"){ const s = outBack(p); el.style.transform=`rotate(${rot}deg) scale(${s})`+extra; }
-    else if (anim==="slideU"){ el.style.transform=`rotate(${rot}deg) translateY(${(1-outCubic(p))*220}px)`; el.style.opacity=p; }
-    else if (anim==="slideD"){ el.style.transform=`rotate(${rot}deg) translateY(${(1-outCubic(p))*-220}px)`; el.style.opacity=p; }
+    else if (anim==="slideU"){ el.style.transform=`rotate(${rot}deg) translateY(${(1-outCubic(p))*140}px)`; el.style.opacity=p; }
+    else if (anim==="slideD"){ el.style.transform=`rotate(${rot}deg) translateY(${(1-outCubic(p))*-140}px)`; el.style.opacity=p; }
     else if (anim==="slideL"){ el.style.transform=`rotate(${rot}deg) translateX(${(1-outCubic(p))*-320}px)`; el.style.opacity=p; }
     else if (anim==="slideR"){ el.style.transform=`rotate(${rot}deg) translateX(${(1-outCubic(p))*320}px)`; el.style.opacity=p; }
     else if (anim==="fade"){ el.style.transform=`rotate(${rot}deg)`; el.style.opacity=p; }

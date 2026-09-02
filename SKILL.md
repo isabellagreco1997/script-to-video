@@ -32,6 +32,7 @@ This is for people, not for a model. A person watching has one question every se
 * If the picture only makes sense *because* of the narration, it is the wrong picture. If a stranger could pause on it and guess the sentence, it is right.
 * Never show the same image twice. `tl.write()` reports reuse; treat every hit as a bug.
 * Whole images, centred, nothing bleeding off the edge: `tl.pic()` for layers, `tl.bg()` (contain + blurred backdrop) for full-frame stills. Use `fit="cover"` only for wide photos and clips that can lose their edges. Don't crop into a small image; a 600 px photo blown up to 1080p is a glitch.
+* **No black holes between shots.** A cut that drops to black for a quarter second while the next image fades in reads as a glitch. An image-only shot automatically gets its own blurred copy as a backdrop from frame one (`backdrop=False` on the shot to opt out), so every cut lands on something. Cuts are hard, moves are soft: slide/pop in 0.3 s, never a long fade on a new image.
 * A continuation (same image, next shot, new camera move) uses `anim="none"`. A fade or slide on an image that is already on screen reads as a flicker.
 * Text appears within a tenth of a second of its word, and it is big: slams ≥ 150 px, chips ≥ 56 px. A word the viewer can't read is worse than no word.
 * Watch it as a viewer, at speed, once, before showing anyone. The dense sheet (a frame every half second) catches what the two-per-shot audit misses: a pop-in that flashes, a diagram with its labels cut off, a photo held for five seconds.
@@ -42,7 +43,7 @@ Write for the ear: short sentences, one idea each, numbers as words, no parenthe
 
 ## 2. Voice
 
-`script-to-video voice script.txt work/narration.wav --voice am_puck` (male) / `af_bella` (female). Kokoro is free, local, MIT. Sentence gaps 0.28 s, paragraph gaps 0.55 s, normalised to −1 dB. Listen to a paragraph before committing to a voice. If the user has their own recording, use that instead, the pipeline doesn't care.
+`script-to-video voice script.txt work/narration.wav --voice am_puck` (male) / `af_bella` (female). Kokoro is free, local, MIT. **Tempo is part of the edit**: the dead air Kokoro leaves before and after every sentence is trimmed, sentences are 0.12 s apart, paragraphs 0.30 s, speed 1.06. That is what makes the clip feel fast-paced; a picture per idea over a slow, gappy voice still drags. Loosen (`--gap 0.3 --pgap 0.6 --speed 1.0`) only for a calm, documentary read. If the user brings their own recording, run it through a silence trim too (ffmpeg `silenceremove`, or cut the gaps in the timeline by shot). Normalised to −1 dB. Listen to a paragraph before committing to a voice. If the user has their own recording, use that instead, the pipeline doesn't care.
 
 ## 3. Align
 
@@ -97,4 +98,5 @@ tl.write("work/timeline.js")
 * Wikimedia: use curl with a User-Agent; python's urllib has broken certs on some Macs. Record licences.
 * Disk: 9,000 JPEG frames ≈ 1.5 GB. Delete superseded render_frames folders, keep the current one for partial re-renders.
 * When the user says "it doesn't hit" without specifics, check in order: sound design, pacing, image specificity, sameness of animation.
+* When the user says "transitions look glitchy": look for cuts to black between shots (missing backdrop), a fade on an image already on screen (use `anim="none"`), a clip that loops instead of holding, a pop on a huge image (use slideU), or a flash on an ordinary cut.
 * When the user says "too many words": they are right. Replace slams with pictures until the share is ≤ 5–10%.

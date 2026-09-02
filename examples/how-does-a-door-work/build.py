@@ -26,7 +26,7 @@ tl.shot("Start with", see="a real brass hinge, close", bg=tl.bg(P + "hinge_Carro
 tl.shot("Two leaves", see="the labelled diagram: leaves, knuckles, pin", layers=[tl.pic(P + "hinge_Basic_hinge_svg.png", safe=0.9, anim="slideU")])
 tl.shot("The leaves screw", see="same diagram, pushing in on the pin", layers=[tl.pic(P + "hinge_Basic_hinge_svg.png", safe=0.9, anim="none", zoomTo=1.4, origin="80% 55%")])
 tl.shot("rotate around", see="top-down drawing: door swinging about the pin", layers=[tl.pic("axis.png", safe=0.9, anim="fade")])
-tl.shot("That line", see="the axis dot, pushed in", layers=[tl.pic("axis.png", safe=0.9, anim="none", zoomTo=1.5, origin="25% 50%")])
+tl.shot("That line|The line", see="the axis dot, pushed in", layers=[tl.pic("axis.png", safe=0.9, anim="none", zoomTo=1.5, origin="25% 50%")])
 tl.shot("millimeter|millimetre", see="same drawing, axis tilted, door drifting", layers=[tl.pic("axis_tilted.png", safe=0.9, anim="fade")])
 tl.shot("refuses", see="a worn old hinge", bg=tl.bg(P + "hinge_Hinge2P3_jpg.png", kb="zin", dark=0.15))
 tl.shot("old doors drift", see="an old wooden door hanging in a stone wall", bg=tl.bg("old_door.jpg", kb="zout", dark=0.15))
@@ -51,7 +51,7 @@ tl.shot("With no key", see="the line drawn through: pins cross it, nothing turns
 tl.shot("The right key", see="diagram: key in, pins lifted", layers=[tl.pic("pin_with_key.png", safe=0.9, anim="fade")])
 tl.shot("the shear line", see="the red dashed shear line drawn on", layers=[tl.pic("pin_shear.png", safe=0.9, anim="none", zoomTo=1.4, origin="50% 50%")])
 tl.shot("That's it", see="the wrong key: pins misaligned", layers=[tl.pic("pin_bad_key.png", safe=0.9, anim="fade")])
-tl.shot("A lock is", see="the line", layers=[tl.T("A SHAPE TEST.", 380, 420, fs=170, rot=-2, i=tl.rel("shape test"))])
+tl.shot("A lock is|lock is a shape", see="the line", layers=[tl.T("A SHAPE TEST.", 380, 420, fs=170, rot=-2, i=tl.rel("shape test"))])
 # ---- yale
 tl.shot("Linus Yale", see="his portrait and name", layers=[tl.pic("yale.jpg", safe=0.75, anim="slideU", rot=-2), tl.C("LINUS YALE JR.", 760, 940, 0.3, fs=64)])
 tl.shot("1861", see="the article, pushed to the paragraph", layers=[tl.pic("wiki_yale.png", safe=0.92, anim="fade", zoomTo=1.5, origin="30% 40%")])
