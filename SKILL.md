@@ -7,6 +7,10 @@ description: Turn a script into a narrated, word-synced explainer video (16:9 Yo
 
 Tools: `script_to_video/` (Python: Pillow, numpy; Kokoro TTS; whisper for word timings), `engine/` (Chrome-rendered stage + puppeteer renderer), ffmpeg. Read this whole file before starting a video. Every rule below was paid for with a bad cut.
 
+## 0a. Expectations
+
+The first build is a draft the user directs, not a deliverable. Say so when you hand it over, then ask for notes on style, assets, timing and alignment, and iterate: swap images, change a shot to a diagram, nudge an anchor, re-render just the frames that changed. Two or three rounds is normal. Never present a first render as final.
+
 ## 0. What a good one looks like
 
 * The screen is **black until the first key word**, then every element appears **the second its word is spoken**. Word-sync is the whole trick.

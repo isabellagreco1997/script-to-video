@@ -4,6 +4,8 @@
 
 It also ships as a **Claude Code skill** (`SKILL.md`): drop the folder in `~/.claude/skills/` and Claude plans the shots, fetches the pictures, and builds the video from your script.
 
+> **What to expect.** The first build is a starting point, not a finished video. It gets you from a script to a synced, illustrated draft in minutes; the remaining work is direction: tell the AI (or edit `build.py` yourself) what to change in the overall style, which images or clips to swap, where the timing or alignment is off, which shot should be a diagram instead of a photo. Two or three rounds of notes are normal. This is a time saver, not a final result.
+
 <table align="center">
   <tr>
     <td align="center" width="62%"><a href="https://github.com/isabellagreco1997/script-to-video/releases/download/examples-v2/how-does-a-door-work.mp4"><img src="examples/how-does-a-door-work/out/preview.gif" width="100%"></a><br><b>How does a door work</b> · 16:9 · 1:49 · <a href="https://github.com/isabellagreco1997/script-to-video/releases/download/examples-v2/how-does-a-door-work.mp4">▶ watch the full video</a><br><sub>Wikipedia images + article screenshots + diagrams drawn in code, male Kokoro voice</sub></td>
