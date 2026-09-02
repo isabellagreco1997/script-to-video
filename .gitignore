@@ -1,13 +1,14 @@
 __pycache__/
 *.pyc
 node_modules/
+*.egg-info/
 examples/*/work/render_frames/
 examples/*/work/gifframes/
+examples/*/work/clips/
 examples/*/work/*.wav
 examples/*/work/*.mp3
-examples/*/work/*.json
-examples/*/work/clips/
+examples/*/work/words.json
+examples/*/work/capture_jobs.json
 examples/*/work/stage.html
-examples/*/out/*.mp4
 *.mp4
 .DS_Store

@@ -1,0 +1,62 @@
+[
+ {
+  "file": "miyazaki.jpg",
+  "query": "Hidetaka Miyazaki",
+  "title": "File:Hidetaka Miyazaki, GDCA 2016 (cropped).jpg",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/9/9a/Hidetaka_Miyazaki%2C_GDCA_2016_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+  "page": "https://commons.wikimedia.org/wiki/File:Hidetaka_Miyazaki,_GDCA_2016_(cropped).jpg",
+  "license": "CC BY 2.0",
+  "artist": "Official GDC",
+  "credit": "<a rel=\"nofollow\" class=\"external free\" href=\"https://www.flickr.com/photos/officialgdc/25564693730/\">https://www.flickr.com/photos/officialgdc/25564693730/</a>"
+ },
+ {
+  "file": "fromsoftware.jpg",
+  "query": "FromSoftware building Tokyo",
+  "title": "File:Tokyo Gas building and Harumi Passenger ship terminal from Tokyo Tower.jpg",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/a/ad/Tokyo_Gas_building_and_Harumi_Passenger_ship_terminal_from_Tokyo_Tower.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+  "page": "https://commons.wikimedia.org/wiki/File:Tokyo_Gas_building_and_Harumi_Passenger_ship_terminal_from_Tokyo_Tower.jpg",
+  "license": "CC BY-SA 3.0",
+  "artist": "No machine-readable author provided. <a href=\"//commons.wikimedia.org/wiki/User:Chris_73\" title=\"User:Chris 73\">Chris 73</a> assumed (based on copyright claims).",
+  "credit": "No machine-readable source provided. Own work assumed (based on copyright claims)."
+ },
+ {
+  "file": "ps3.jpg",
+  "query": "PlayStation 3 console",
+  "title": "File:PS3-Consoles-Set.jpg",
+  "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/30/PS3-Consoles-Set.jpg/1920px-PS3-Consoles-Set.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+  "page": "https://commons.wikimedia.org/wiki/File:PS3-Consoles-Set.jpg",
+  "license": "Public domain",
+  "artist": "<a href=\"//commons.wikimedia.org/wiki/User:Evan-Amos\" title=\"User:Evan-Amos\">Evan-Amos</a>",
+  "credit": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+ },
+ {
+  "file": "knight_cosplay.jpg",
+  "query": "Dark Souls cosplay",
+  "title": "File:Dragon Con 2025 - Dark Souls cosplay 01.jpg",
+  "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e2/Dragon_Con_2025_-_Dark_Souls_cosplay_01.jpg/1920px-Dragon_Con_2025_-_Dark_Souls_cosplay_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+  "page": "https://commons.wikimedia.org/wiki/File:Dragon_Con_2025_-_Dark_Souls_cosplay_01.jpg",
+  "license": "CC0",
+  "artist": "<a href=\"//commons.wikimedia.org/wiki/User:Thomson200\" title=\"User:Thomson200\">Thomson200</a>",
+  "credit": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+ },
+ {
+  "file": "elden_ring_cosplay.jpg",
+  "query": "Elden Ring cosplay",
+  "title": "File:Dragon Con 2025 - Elden Ring group cosplay 02.jpg",
+  "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/de/Dragon_Con_2025_-_Elden_Ring_group_cosplay_02.jpg/1920px-Dragon_Con_2025_-_Elden_Ring_group_cosplay_02.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+  "page": "https://commons.wikimedia.org/wiki/File:Dragon_Con_2025_-_Elden_Ring_group_cosplay_02.jpg",
+  "license": "CC0",
+  "artist": "<a href=\"//commons.wikimedia.org/wiki/User:Thomson200\" title=\"User:Thomson200\">Thomson200</a>",
+  "credit": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+ },
+ {
+  "file": "sword.jpg",
+  "query": "medieval longsword museum",
+  "title": "File:Norwegian Military defense in the Middle Ages (Forsvaret i middelalderen) Crossbow (armbr\u00f8st) Forsvarsmuseet Akershus festning 2019 DSC01476.jpg",
+  "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1a/Norwegian_Military_defense_in_the_Middle_Ages_%28Forsvaret_i_middelalderen%29_Crossbow_%28armbr%C3%B8st%29_Forsvarsmuseet_Akershus_festning_2019_DSC01476.jpg/1920px-Norwegian_Military_defense_in_the_Middle_Ages_%28Forsvaret_i_middelalderen%29_Crossbow_%28armbr%C3%B8st%29_Forsvarsmuseet_Akershus_festning_2019_DSC01476.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+  "page": "https://commons.wikimedia.org/wiki/File:Norwegian_Military_defense_in_the_Middle_Ages_(Forsvaret_i_middelalderen)_Crossbow_(armbr%C3%B8st)_Forsvarsmuseet_Akershus_festning_2019_DSC01476.jpg",
+  "license": "CC BY-SA 4.0",
+  "artist": "<a href=\"//commons.wikimedia.org/wiki/User:Wolfmann\" title=\"User:Wolfmann\">Wolfmann</a>",
+  "credit": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+ }
+]
