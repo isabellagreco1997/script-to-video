@@ -47,9 +47,13 @@ class Timeline:
     # ---------- layers
     def T(self, text, x, y, fs=150, rot=0, i=0.0, **k): return dict(type="text", text=text, x=x, y=y, fs=fs, rot=rot, **{"in": i}, **k)
     def C(self, text, x, y, i=0.0, **k): return dict(type="chip", text=text, x=x, y=y, **{"in": i}, **k)
-    def I(self, src, x, y, w, i=0.0, **k): return dict(type="img", src=(src if "/" in src else self.A + src), x=x, y=y, w=w, **{"in": i}, **k)
+    def _src(self, src):
+        """paths are relative to the work dir; anything not already under assets/ or gifs/ (or absolute/http) gets the assets prefix."""
+        return src if src.startswith(("assets/", "gifs/", "gifframes/", "/", "http")) else self.A + src
+
+    def I(self, src, x, y, w, i=0.0, **k): return dict(type="img", src=self._src(src), x=x, y=y, w=w, **{"in": i}, **k)
     def G(self, name, x, y, w, i=0.0, **k): return dict(type="img", src=f"gifs/{name}.gif", x=x, y=y, w=w, plain=True, **{"in": i}, **k)
-    def bg(self, src, kb="zin", dark=0.0, fit="cover", shake=False): return dict(src=(src if "/" in src else self.A + src), kb=kb, dark=dark, fit=fit, shake=shake)
+    def bg(self, src, kb="zin", dark=0.0, fit="cover", shake=False): return dict(src=self._src(src), kb=kb, dark=dark, fit=fit, shake=shake)
     def clip(self, name, kb="zin", dark=0.0, fit="contain"): return dict(src=f"gifs/{name}.gif", kb=kb, dark=dark, fit=fit)
 
     # ---------- shots
