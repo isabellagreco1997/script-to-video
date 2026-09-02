@@ -6,10 +6,12 @@ It also ships as a **Claude Code skill** (`SKILL.md`): drop the folder in `~/.cl
 
 <table align="center">
   <tr>
-    <td align="center" width="62%"><img src="examples/how-does-a-door-work/out/how-does-a-door-work_audit_1.jpg" width="100%"><br><b>How does a door work</b> · 16:9 · 1:49<br><sub>Wikipedia images + article screenshots + diagrams, male Kokoro voice</sub></td>
-    <td align="center" width="38%"><img src="examples/dark-souls-story-916/out/dark-souls-story-916_audit_1.jpg" width="100%"><br><b>The story of Dark Souls</b> · 9:16 · 0:58<br><sub>trailer clips + article captures + a counter, same voice</sub></td>
+    <td align="center" width="62%"><a href="https://github.com/isabellagreco1997/script-to-video/releases/download/examples-v2/how-does-a-door-work.mp4"><img src="examples/how-does-a-door-work/out/preview.gif" width="100%"></a><br><b>How does a door work</b> · 16:9 · 1:49 · <a href="https://github.com/isabellagreco1997/script-to-video/releases/download/examples-v2/how-does-a-door-work.mp4">▶ watch the full video</a><br><sub>Wikipedia images + article screenshots + diagrams drawn in code, male Kokoro voice</sub></td>
+    <td align="center" width="38%"><a href="https://github.com/isabellagreco1997/script-to-video/releases/download/examples-v2/dark-souls-story-916.mp4"><img src="examples/dark-souls-story-916/out/preview.gif" width="100%"></a><br><b>The story of Dark Souls</b> · 9:16 · 0:58 · <a href="https://github.com/isabellagreco1997/script-to-video/releases/download/examples-v2/dark-souls-story-916.mp4">▶ watch the full video</a><br><sub>trailer clips + article captures + a counter, same voice</sub></td>
   </tr>
 </table>
+
+Both full videos are on the [releases page](https://github.com/isabellagreco1997/script-to-video/releases/tag/examples-v2); the contact sheets the build writes are in each example's `out/` folder.
 
 ## How it works
 
