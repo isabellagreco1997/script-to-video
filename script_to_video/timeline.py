@@ -51,6 +51,17 @@ class Timeline:
 
     # ---------- layers
     def T(self, text, x, y, fs=150, rot=0, i=0.0, **k): return dict(type="text", text=text, x=x, y=y, fs=fs, rot=rot, **{"in": i}, **k)
+    def words(self, text, ins=None, fs=170, rot=-2, y=None, **k):
+        """A line that appears WORD BY WORD, each word on its own spoken word, centred on the stage.
+        ins: one anchor per word, e.g. ["@everything", "@falling", "@apart"]; default = each word anchors to itself.
+        Pair with shot(..., shake="@apart") to jolt the whole picture on the hit word."""
+        ws = text.split(" ")
+        if ins is None: ins = ["@" + w.strip(".,!?").lower() for w in ws]
+        assert len(ins) == len(ws), "one anchor per word"
+        d = dict(type="words", text=text, ins=list(ins), fs=fs, rot=rot, **k)
+        if y is not None: d["y"] = y
+        return d
+
     def C(self, text, x, y, i=0.0, **k): return dict(type="chip", text=text, x=x, y=y, **{"in": i}, **k)
     def _src(self, src):
         """paths are relative to the work dir; anything not already under assets/ or gifs/ (or absolute/http) gets the assets prefix."""
@@ -95,12 +106,15 @@ class Timeline:
         if backdrop and "bg" not in sh and lys and lys[0].get("type") == "img" and (lys[0].get("in") or 0) < 0.3:
             # an image-only shot: put the same image, blurred, behind it from frame one so the cut never drops to black
             sh["bg"] = dict(src=lys[0]["src"], kb="still", dark=0.0, fit="contain", blur=True, backdropOnly=True)
+        def _res(v):                                          # "@phrase" -> seconds after this shot's start
+            if not (isinstance(v, str) and v.startswith("@")): return v
+            j = self._find(v[1:], self.pos)
+            if j is None: self.missing.append(v[1:]); return 0.0
+            return round(max(0.0, self.W[j][1] - t0), 2)
         for L in lys:                                          # resolve "@phrase" ins relative to this shot
-            v = L.get("in")
-            if isinstance(v, str) and v.startswith("@"):
-                j = self._find(v[1:], self.pos)
-                if j is None: self.missing.append(v[1:]); L["in"] = 0.0
-                else: L["in"] = round(max(0.0, self.W[j][1] - t0), 2)
+            L["in"] = _res(L.get("in", 0.0))
+            if "ins" in L: L["ins"] = [_res(v) for v in L["ins"]]; L["in"] = min(L["ins"]) if L["ins"] else 0.0
+        if "shake" in sh: sh["shakeAt"] = _res(sh.pop("shake"))
         self.S.append([t0, sh])
         return t0
 
@@ -136,7 +150,7 @@ class Timeline:
         out.append("];")
         Path(path).write_text("\n".join(out))
         text_t = sum((self.S[i + 1][0] if i + 1 < len(self.S) else self.end) - t0 for i, (t0, sh) in enumerate(self.S)
-                     if any(l.get("type") == "text" for l in sh.get("layers", [])))
+                     if any(l.get("type") in ("text", "words") for l in sh.get("layers", [])))
         long = [(i, round((self.S[i + 1][0] if i + 1 < len(self.S) else self.end) - t0, 1)) for i, (t0, _) in enumerate(self.S)
                 if (self.S[i + 1][0] if i + 1 < len(self.S) else self.end) - t0 > 8]
         # reuse check: the same image twice is a smell (one image per idea)

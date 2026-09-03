@@ -78,7 +78,7 @@ tl.write("work/timeline.js")
 * `tl.write()` reports word-slam share, shots over 8 s, missing anchors, order problems **and images used twice**. The build also writes a dense audit sheet (a frame every half second): watch that as a viewer would before showing anyone.
 * `tl.rel("word")` = seconds from the shot start to a word, for a layer's `in`. Elements appear on their word.
 * Backgrounds: `kb` = zin, zout, panL, panR, panD, panU, punch, still; `dark` dims; `fit` cover/contain; `flash=0` white flash on the cut.
-* Layers: `I` image (pop, slideU/D/L/R, fade, `zoomTo` + `origin` for a slow push), `T` white Impact word with black stroke, `C` black chip, `G` clip as a layer, `counter` counts up.
+* Layers: `I` image (pop, slideU/D/L/R, fade, `zoomTo` + `origin` for a slow push), `T` white Impact word with black stroke, `C` black chip, `G` clip as a layer, `counter` counts up, `tl.words()` a centred line that appears word by word on the spoken words. `tl.shot(..., shake="@apart")` jolts the whole picture on that word.
 
 ## Assets with licences
 

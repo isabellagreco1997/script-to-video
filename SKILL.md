@@ -37,6 +37,13 @@ This is for people, not for a model. A person watching has one question every se
 * Text appears within a tenth of a second of its word, and it is big: slams ≥ 150 px, chips ≥ 56 px. A word the viewer can't read is worse than no word.
 * Watch it as a viewer, at speed, once, before showing anyone. The dense sheet (a frame every half second) catches what the two-per-shot audit misses: a pop-in that flashes, a diagram with its labels cut off, a photo held for five seconds.
 
+## 0c. Fun behaviours (use one or two per video, on the lines that earn it)
+
+* **Word by word.** `tl.words("IT FELL APART.", ins=["@everything", "@falling", "@apart"])` puts the line dead centre and pops each word on its own spoken word. No x/y maths: the engine centres the whole line.
+* **The hit.** `tl.shot("the animation", shake="@apart", layers=[...])` jolts the entire picture (background and all) on that word, decaying over half a second. Pair it with the last word of a word-by-word line, a "YOU DIED", a number landing. Never on an ordinary cut.
+* **Counter** counting up live to the number as it is said; **flash** (`flash=0`) on a punch cut; **replace-slams** for escalation ("1 YEAR" then "WEEKS."); a **chip** under a face.
+* These are punctuation. Three of them in a minute and the viewer stops feeling any of them.
+
 ## 1. Script
 
 Write for the ear: short sentences, one idea each, numbers as words, no parentheses. Spell out things the voice will fluff (`C L I`, `G P U`). Keep the tone dry and specific; a joke must survive with no music under it. End with the thesis, then stop. 150 words ≈ 1 minute.

@@ -55,10 +55,14 @@ function buildShot(si){
     let el;
     if (L.type==="img"){ el = document.createElement("img"); el.src=L.src; el.className="ly imgcard";
       el.style.width=(L.w||500)+"px"; if(L.plain) el.classList.remove("imgcard"); if(L.card){ el.style.background="#f7f4ec"; el.style.padding="34px 44px"; el.style.boxSizing="border-box"; el.classList.add("imgcard"); } }
+    else if (L.type==="words"){ el = document.createElement("div"); el.className="ly word"; el.style.whiteSpace="nowrap";
+      if(L.fs) el.style.fontSize=L.fs+"px";
+      (L.text||"").split(" ").forEach((w,i)=>{ const sp=document.createElement("span"); sp.textContent=w; sp.style.display="inline-block"; if(i) sp.style.marginLeft="0.28em"; el.appendChild(sp); });
+      if (L.center!==false){ el.style.left="50%"; el.style.top=(L.y!==undefined? L.y+"px" : "50%"); el.dataset.center="1"; } }
     else { el = document.createElement("div"); el.className="ly word"+(L.cls?" "+L.cls:"");
       el.textContent = L.text||""; if(L.fs) el.style.fontSize=L.fs+"px"; if(L.color) el.style.color=L.color;
       if (L.type==="chip") el.className="ly chip"; if (L.wrap){ el.style.whiteSpace="normal"; el.style.width=L.wrap+"px"; } }
-    el.style.left=(L.x||0)+"px"; el.style.top=(L.y||0)+"px";
+    if (!el.dataset.center){ el.style.left=(L.x||0)+"px"; el.style.top=(L.y||0)+"px"; }
     lysEl.appendChild(el); layerEls.push(el);
   }
 }
@@ -68,6 +72,10 @@ function render(t){
   if (si<0) si = t>=TL[TL.length-1].t1 ? TL.length-1 : 0;
   if (si!==curShot){ buildShot(si); curShot=si; }
   const sh = TL[si], lt = t - sh.t0, dur = sh.t1 - sh.t0;
+  // stage shake: everything on screen jolts on a word (sh.shakeAt seconds into the shot), decaying over ~0.6 s
+  let shx=0, shy=0;
+  if (sh.shakeAt!==undefined && lt>=sh.shakeAt){ const a = (sh.shakeAmp||18)*Math.exp(-(lt-sh.shakeAt)*5); shx = Math.sin(lt*61)*a; shy = Math.cos(lt*53)*a*0.7; }
+  lysEl.style.transform = `translate(${shx}px, ${shy}px)`;
   if (sh.bg){
     const gn = gifName(sh.bg.src);
     if (gn) { bgEl.src = gifFrame(gn, lt); if (bgBlur.style.display !== "none") bgBlur.src = bgEl.src; }
@@ -83,11 +91,16 @@ function render(t){
     else if(kb==="punch"){ s = 1.10-0.08*clamp(lt/.5,0,1); }
     else if(kb==="still"){ s = s0||1; }
     if (sh.bg.shake){ x += Math.sin(lt*43)*7; y += Math.cos(lt*37)*6; }
+    x += shx; y += shy;
     bgEl.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(${s})`;
   }
   flashEl.style.opacity = sh.flash!==undefined ? clamp(1-(lt-sh.flash)/0.09,0,1)*(lt>=sh.flash?1:0) : 0;
   (sh.layers||[]).forEach((L,i)=>{
     const el = layerEls[i]; if(!el) return;
+    if (L.type==="words"){ const ins = L.ins||[]; const rot = L.rot||0; let any=false;
+      [...el.children].forEach((sp,j)=>{ const ti = ins[j]!==undefined ? ins[j] : (L.in||0); const pj = clamp((lt-ti)/0.22,0,1);
+        if (lt<ti){ sp.style.opacity=0; sp.style.transform="scale(0.6)"; } else { any=true; sp.style.opacity=1; sp.style.transform=`scale(${outBack(pj)})`; } });
+      el.style.opacity = any?1:0; el.style.transform = (el.dataset.center?"translate(-50%,-50%) ":"")+`rotate(${rot}deg)`; return; }
     const tin = L.in||0, d = L.d||(L.type==="text"||L.type==="chip" ? 0.3 : 0.3);
     let p = clamp((lt-tin)/d,0,1);
     if (lt < tin || (L.out!==undefined && lt >= L.out)){ el.style.opacity=0; return; }
