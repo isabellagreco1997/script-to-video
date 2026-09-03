@@ -92,7 +92,7 @@ class Timeline:
             self.pos = i; t0 = round(self.W[i][1] + off, 2)
         backdrop = sh.pop("backdrop", True)
         lys = sh.get("layers") or []
-        if backdrop and "bg" not in sh and lys and lys[0].get("type") == "img" and not lys[0].get("in"):
+        if backdrop and "bg" not in sh and lys and lys[0].get("type") == "img" and (lys[0].get("in") or 0) < 0.3:
             # an image-only shot: put the same image, blurred, behind it from frame one so the cut never drops to black
             sh["bg"] = dict(src=lys[0]["src"], kb="still", dark=0.0, fit="contain", blur=True, backdropOnly=True)
         for L in lys:                                          # resolve "@phrase" ins relative to this shot
