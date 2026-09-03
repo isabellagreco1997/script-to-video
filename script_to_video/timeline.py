@@ -60,7 +60,7 @@ class Timeline:
 
     def pic(self, src, i=0.0, safe=None, anim="slideU", plain=True, cx=None, cy=None, zoomTo=None, origin="50% 50%", **k):
         """A WHOLE image, centred, fitted inside `safe` × the stage so nothing bleeds off the edges.
-        Size is computed from the file, so wide diagrams and tall pages both fit. zoomTo is capped so it stays inside."""
+        Size is computed from the file, so wide diagrams and tall pages both fit. A zoomTo push into a detail is a deliberate crop and is not capped."""
         path = self.work / self._src(src)
         iw, ih = Image.open(path).size
         maxw, maxh = self.w * safe, self.h * safe
@@ -68,7 +68,7 @@ class Timeline:
         x = int((self.w - w) / 2 if cx is None else cx - w / 2); y = int((self.h - h) / 2 if cy is None else cy - h / 2)
         d = dict(type="img", src=self._src(src), x=x, y=y, w=w, plain=plain, anim=anim, **{"in": i}, **k)
         if zoomTo:
-            d["zoomTo"] = min(zoomTo, 1 / safe * 1.35); d["origin"] = origin
+            d["zoomTo"] = zoomTo; d["origin"] = origin      # a push into a detail is a deliberate crop, not bleeding
         return d
     def G(self, name, x, y, w, i=0.0, **k): return dict(type="img", src=f"gifs/{name}.gif", x=x, y=y, w=w, plain=True, **{"in": i}, **k)
     def bg(self, src, kb="zin", dark=0.0, fit=None, shake=False, blur=True):
