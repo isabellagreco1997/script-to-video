@@ -78,12 +78,13 @@ function render(t){
   lysEl.style.transform = `translate(${shx}px, ${shy}px)`;
   if (sh.bg){
     const gn = gifName(sh.bg.src);
-    if (gn) { bgEl.src = gifFrame(gn, lt); if (bgBlur.style.display !== "none") bgBlur.src = bgEl.src; }
+    if (gn) { bgEl.src = gifFrame(gn, lt + (sh.bg.offset||0)); if (bgBlur.style.display !== "none") bgBlur.src = bgEl.src; }
     const p = clamp(lt/dur,0,1); const kb = sh.bg.kb||"zin";
     let s=1, x=0, y=0; const k = Math.min(W, H) / 1080;      // pan distances scale with the stage
     const s0 = sh.bg.s0;                                        // continuation: start where the previous shot's move ended
-    if(kb==="zin") s = (s0||1.02)+0.10*p;
-    else if(kb==="zout") s = (s0||1.12)-0.10*p;
+    const gentle = sh.bg.fit==="contain";                       // a contained clip/still must stay whole: 6% push at most
+    if(kb==="zin") s = gentle ? (s0||1.0)+0.06*p : (s0||1.02)+0.10*p;
+    else if(kb==="zout") s = gentle ? (s0||1.06)-0.06*p : (s0||1.12)-0.10*p;
     else if(kb==="panL"){ s=1.14; x = (60-120*p)*k; }
     else if(kb==="panR"){ s=1.14; x = (-60+120*p)*k; }
     else if(kb==="panD"){ s=1.14; y = (50-100*p)*k; }
@@ -106,7 +107,7 @@ function render(t){
     if (lt < tin || (L.out!==undefined && lt >= L.out)){ el.style.opacity=0; return; }
     el.style.opacity = 1;
     const lgn = gifName(L.src);
-    if (lgn) el.src = gifFrame(lgn, lt);
+    if (lgn) el.src = gifFrame(lgn, lt + (L.offset||0));
     const rot = L.rot||0, anim = L.anim||"pop";
     if (L.type==="counter"){ el.textContent = Math.round(outCubic(p)*L.to).toLocaleString(); }
     if (L.spin){ el.style.transform = `rotate(${(lt*120)%360}deg)`; return; }

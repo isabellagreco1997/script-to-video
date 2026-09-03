@@ -84,6 +84,7 @@ tl.write("work/timeline.js")
 * Layer `in` = seconds after the shot start; `tl.rel("word")` gives it. Elements appear on their word. `rel()` returns a marker that `shot()` resolves inside the shot it lands in (the layers are built before `shot()` runs, so a number computed early would be relative to the previous shot and the text lands a second late).
 * Camera moves: `kb` = zin / zout / panL / panR / panD / panU / punch / still. `zoomTo` + `origin` = slow push into a paragraph or a detail (never highlight boxes).
 * Text: white Impact, thick black stroke, ±2–4° rotation, pop-in with overshoot. Chips: plain black rectangle, white text, for names/dates/sources.
+* **A clip must show the moment the words describe.** `tl.clip("play1", offset=1.0)` starts the clip 1 s in, so "when she jumps" lands on the jump, not on whatever is at the top of the file. Look at the clip's contact sheet and pick the second. If the subject is near the edge of the frame, `kb="still"`: a contained clip is never cropped by more than 6%, but 6% is enough to lose a sprite at the border.
 * Clips: `tl.clip("name")` as background, `tl.G("name", x, y, w)` as a layer. Frames are pre-extracted, deterministic. A state sequence (open → closed) gets `"hold": true` in gifmeta so it plays once and stays on the last frame instead of looping.
 * `write()` prints the word-slam share, shots over 8 s, missing anchors and order problems. Fix all four before rendering.
 

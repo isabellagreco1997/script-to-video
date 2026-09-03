@@ -88,7 +88,12 @@ class Timeline:
         Pass fit explicitly to override either."""
         if fit is None: fit = "cover" if self.portrait else "contain"
         return dict(src=self._src(src), kb=kb, dark=dark, fit=fit, shake=shake, blur=blur)
-    def clip(self, name, kb="zin", dark=0.0, fit="contain"): return dict(src=f"gifs/{name}.gif", kb=kb, dark=dark, fit=fit)
+    def clip(self, name, kb="zin", dark=0.0, fit="contain", offset=0.0):
+        """A clip as the background. offset = seconds into the clip to start from (pick the moment that matches the words,
+        e.g. the jump, not whatever happens to be at the top of the file). fit='contain' keeps the whole frame; the push is gentle."""
+        d = dict(src=f"gifs/{name}.gif", kb=kb, dark=dark, fit=fit)
+        if offset: d["offset"] = offset
+        return d
 
     # ---------- shots
     def shot(self, anchor, off: float = 0.0, see: str | None = None, **sh):
@@ -122,14 +127,18 @@ class Timeline:
 
     # ---------- continuity: a move on an image that is already on screen continues, it does not restart
     def _continue_moves(self):
-        END = {"zin": lambda s0: (s0 or 1.02) + 0.10, "zout": lambda s0: (s0 or 1.12) - 0.10, "still": lambda s0: s0 or 1.0,
-               "punch": lambda s0: 1.02, "panL": lambda s0: 1.14, "panR": lambda s0: 1.14, "panD": lambda s0: 1.14, "panU": lambda s0: 1.14}
+        def END(kb, s0, gentle):
+            if kb == "zin": return ((s0 or 1.0) + 0.06) if gentle else ((s0 or 1.02) + 0.10)
+            if kb == "zout": return ((s0 or 1.06) - 0.06) if gentle else ((s0 or 1.12) - 0.10)
+            if kb == "still": return s0 or 1.0
+            if kb == "punch": return 1.02
+            return 1.14
         for i in range(1, len(self.S)):
             prev, cur = self.S[i - 1][1], self.S[i][1]
             pb, cb = prev.get("bg"), cur.get("bg")
             if pb and cb and pb.get("src") == cb.get("src") and not pb.get("backdropOnly") and not cb.get("backdropOnly"):
-                if cb.get("kb", "zin") in ("zin", "zout", "still") and pb.get("kb", "zin") in END:
-                    cb["s0"] = round(END[pb.get("kb", "zin")](pb.get("s0")), 3)
+                if cb.get("kb", "zin") in ("zin", "zout", "still"):
+                    cb["s0"] = round(END(pb.get("kb", "zin"), pb.get("s0"), pb.get("fit") == "contain"), 3)
             for L in cur.get("layers") or []:
                 if L.get("type") != "img" or not L.get("zoomTo") or L.get("anim") != "none": continue
                 for P in prev.get("layers") or []:
