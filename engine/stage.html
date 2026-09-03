@@ -58,7 +58,7 @@ function buildShot(si){
     else if (L.type==="words"){ el = document.createElement("div"); el.className="ly word"; el.style.whiteSpace="nowrap";
       if(L.fs) el.style.fontSize=L.fs+"px";
       (L.text||"").split(" ").forEach((w,i)=>{ const sp=document.createElement("span"); sp.textContent=w; sp.style.display="inline-block"; if(i) sp.style.marginLeft="0.28em"; el.appendChild(sp); });
-      if (L.center!==false){ el.style.left="50%"; el.style.top=(L.y!==undefined? L.y+"px" : "50%"); el.dataset.center="1"; } }
+      if (L.center!==false){ el.style.left=(W/2)+"px"; el.style.top=(L.y!==undefined? L.y : H/2)+"px"; el.dataset.center="1"; } }
     else { el = document.createElement("div"); el.className="ly word"+(L.cls?" "+L.cls:"");
       el.textContent = L.text||""; if(L.fs) el.style.fontSize=L.fs+"px"; if(L.color) el.style.color=L.color;
       if (L.type==="chip") el.className="ly chip"; if (L.wrap){ el.style.whiteSpace="normal"; el.style.width=L.wrap+"px"; } }
