@@ -106,8 +106,27 @@ class Timeline:
 
     def black(self, anchor, off=0.0): return self.shot(anchor, off)
 
+    # ---------- continuity: a move on an image that is already on screen continues, it does not restart
+    def _continue_moves(self):
+        END = {"zin": lambda s0: (s0 or 1.02) + 0.10, "zout": lambda s0: (s0 or 1.12) - 0.10, "still": lambda s0: s0 or 1.0,
+               "punch": lambda s0: 1.02, "panL": lambda s0: 1.14, "panR": lambda s0: 1.14, "panD": lambda s0: 1.14, "panU": lambda s0: 1.14}
+        for i in range(1, len(self.S)):
+            prev, cur = self.S[i - 1][1], self.S[i][1]
+            pb, cb = prev.get("bg"), cur.get("bg")
+            if pb and cb and pb.get("src") == cb.get("src") and not pb.get("backdropOnly") and not cb.get("backdropOnly"):
+                if cb.get("kb", "zin") in ("zin", "zout", "still") and pb.get("kb", "zin") in END:
+                    cb["s0"] = round(END[pb.get("kb", "zin")](pb.get("s0")), 3)
+            for L in cur.get("layers") or []:
+                if L.get("type") != "img" or not L.get("zoomTo") or L.get("anim") != "none": continue
+                for P in prev.get("layers") or []:
+                    if P.get("type") == "img" and P.get("src") == L["src"]:
+                        L["zoomFrom"] = P.get("zoomTo") or 1.0
+                        if P.get("zoomTo") and P.get("origin", "50% 50%") != L.get("origin", "50% 50%"): L["originFrom"] = P.get("origin", "50% 50%")
+                        break
+
     # ---------- output + report
     def write(self, path: str):
+        self._continue_moves()
         out = [f"const META = {json.dumps(dict(w=self.w, h=self.h, dur=self.end))};", "const TL = ["]
         problems = []
         for i, (t0, sh) in enumerate(self.S):

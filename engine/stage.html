@@ -73,14 +73,15 @@ function render(t){
     if (gn) { bgEl.src = gifFrame(gn, lt); if (bgBlur.style.display !== "none") bgBlur.src = bgEl.src; }
     const p = clamp(lt/dur,0,1); const kb = sh.bg.kb||"zin";
     let s=1, x=0, y=0; const k = Math.min(W, H) / 1080;      // pan distances scale with the stage
-    if(kb==="zin") s = 1.02+0.10*p;
-    else if(kb==="zout") s = 1.12-0.10*p;
+    const s0 = sh.bg.s0;                                        // continuation: start where the previous shot's move ended
+    if(kb==="zin") s = (s0||1.02)+0.10*p;
+    else if(kb==="zout") s = (s0||1.12)-0.10*p;
     else if(kb==="panL"){ s=1.14; x = (60-120*p)*k; }
     else if(kb==="panR"){ s=1.14; x = (-60+120*p)*k; }
     else if(kb==="panD"){ s=1.14; y = (50-100*p)*k; }
     else if(kb==="panU"){ s=1.14; y = (-50+100*p)*k; }
     else if(kb==="punch"){ s = 1.10-0.08*clamp(lt/.5,0,1); }
-    else if(kb==="still"){ s = 1; }
+    else if(kb==="still"){ s = s0||1; }
     if (sh.bg.shake){ x += Math.sin(lt*43)*7; y += Math.cos(lt*37)*6; }
     bgEl.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(${s})`;
   }
@@ -98,8 +99,12 @@ function render(t){
     if (L.spin){ el.style.transform = `rotate(${(lt*120)%360}deg)`; return; }
     let extra = "";
     if (L.shake && p>=1){ extra = ` translate(${Math.sin(lt*45)*7}px, ${Math.cos(lt*39)*6}px)`; }
-    if (L.zoomTo){ const zp = clamp(lt/dur,0,1); el.style.transformOrigin = L.origin||"50% 50%";
-      el.style.transform = `rotate(${rot}deg) scale(${1+(L.zoomTo-1)*zp})`;
+    if (L.zoomTo){ const zp = clamp(lt/dur,0,1); const z0 = L.zoomFrom||1;
+      let org = L.origin||"50% 50%";
+      if (L.originFrom){ const a = L.originFrom.split(" ").map(parseFloat), b = org.split(" ").map(parseFloat);
+        org = `${a[0]+(b[0]-a[0])*zp}% ${a[1]+(b[1]-a[1])*zp}%`; }              // glide to the new detail instead of jumping
+      el.style.transformOrigin = org;
+      el.style.transform = `rotate(${rot}deg) scale(${z0+(L.zoomTo-z0)*zp})`;
       if (p<1 && anim!=="none") el.style.opacity = p; return; }
     if (anim==="pop"){ const s = outBack(p); el.style.transform=`rotate(${rot}deg) scale(${s})`+extra; }
     else if (anim==="slideU"){ el.style.transform=`rotate(${rot}deg) translateY(${(1-outCubic(p))*140}px)`; el.style.opacity=p; }
