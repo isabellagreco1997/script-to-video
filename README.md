@@ -15,6 +15,18 @@ It also ships as a **Claude Code skill** (`SKILL.md`): drop the folder in `~/.cl
 
 Both full videos are on the [releases page](https://github.com/isabellagreco1997/script-to-video/releases/tag/examples-v2); the contact sheets the build writes are in each example's `out/` folder.
 
+## Make it work with your agent
+
+You write the script and give notes. The agent runs the pipeline, following `SKILL.md`. Three steps:
+
+1. **Install once** on the machine the agent works on: the Install section below, then `script-to-video setup` for the voice model.
+2. **Give the agent the playbook.**
+   * **Claude Code**: copy or symlink this folder to `~/.claude/skills/script-to-video`. It loads itself when you ask for an explainer, a reel, or a video from a script.
+   * **Codex**: add to `AGENTS.md`: `Read /path/to/script-to-video/SKILL.md before making any video.`
+   * **Cursor / Windsurf / Gemini CLI / anything with a rules file**: paste `SKILL.md` into it, or one line pointing at the file.
+   * **Any chat agent with a shell**: start with "Read script-to-video/SKILL.md, here is my script, make it a 16:9 video with a male voice."
+3. **Direct it.** The first build is a draft: watch it, then say what to change in plain words ("the image at 2:53 is wrong, we're talking about the hinge", "remove the silences", "that transition looks glitchy"). Each note is a partial re-render, not a rebuild. Two or three rounds is normal. If you recorded your own narration, hand over the file and the agent re-aligns everything to your voice.
+
 ## How it works
 
 ```
