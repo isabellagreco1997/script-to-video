@@ -73,7 +73,7 @@ tl.write("work/timeline.js")
 ```
 
 * `shot(phrase, see="what the viewer should be looking at")` starts a shot when the phrase is spoken and moves the cursor forward. `"a|b"` = alternatives for what whisper might have heard. Writing `see=` for every shot *is* the shot plan: a thing → its photo, a mechanism → a diagram that changes state, a number → a counter, a claim → the article.
-* `tl.pic(src)` puts a **whole** image on screen, centred, sized from the file so nothing bleeds off the edge (`zoomTo` is capped to keep it inside). `tl.bg(src)` shows a whole still over a blurred copy of itself; `fit="cover"` only for wide photos and clips.
+* `tl.pic(src)` puts a **whole** image on screen, centred, sized from the file so nothing bleeds off the edge (`zoomTo` is capped to keep it inside). `tl.bg(src)` shows a whole still over a blurred copy of itself. That protection padding is the 16:9 default; a 9:16 timeline flips it and images fill the phone screen (`fit="cover"`, full-width `pic`). Override per shot with `fit=` / `safe=`.
 * Image-only shots get their own blurred copy as a backdrop from the first frame, so a cut never drops to black (`backdrop=False` to opt out).
 * `tl.write()` reports word-slam share, shots over 8 s, missing anchors, order problems **and images used twice**. The build also writes a dense audit sheet (a frame every half second): watch that as a viewer would before showing anyone.
 * `tl.rel("word")` = seconds from the shot start to a word, for a layer's `in`. Elements appear on their word.

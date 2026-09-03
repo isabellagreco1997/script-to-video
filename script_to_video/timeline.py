@@ -21,6 +21,7 @@ class Timeline:
         self.norm = lambda s: re.sub(r"[^a-z0-9 ]", "", s.lower().replace("'", "")).split()
         self.W = [(self.norm(w)[0] if self.norm(w) else "", s, e) for w, s, e in words]
         self.w, self.h, self.pos, self.missing, self.S = w, h, 0, [], []
+        self.portrait = h > w      # 9:16: images fill the phone screen. 16:9: images are protected, whole and centred.
         self.end = round(self.W[-1][2] + tail, 2)
         self.A = assets
         self.work = Path(words_json).resolve().parent     # image sizes are read from here for pic()
@@ -57,7 +58,7 @@ class Timeline:
 
     def I(self, src, x, y, w, i=0.0, **k): return dict(type="img", src=self._src(src), x=x, y=y, w=w, **{"in": i}, **k)
 
-    def pic(self, src, i=0.0, safe=0.86, anim="slideU", plain=True, cx=None, cy=None, zoomTo=None, origin="50% 50%", **k):
+    def pic(self, src, i=0.0, safe=None, anim="slideU", plain=True, cx=None, cy=None, zoomTo=None, origin="50% 50%", **k):
         """A WHOLE image, centred, fitted inside `safe` × the stage so nothing bleeds off the edges.
         Size is computed from the file, so wide diagrams and tall pages both fit. zoomTo is capped so it stays inside."""
         path = self.work / self._src(src)
@@ -70,9 +71,11 @@ class Timeline:
             d["zoomTo"] = min(zoomTo, 1 / safe * 1.35); d["origin"] = origin
         return d
     def G(self, name, x, y, w, i=0.0, **k): return dict(type="img", src=f"gifs/{name}.gif", x=x, y=y, w=w, plain=True, **{"in": i}, **k)
-    def bg(self, src, kb="zin", dark=0.0, fit="contain", shake=False, blur=True):
-        """Full-frame background. fit='contain' (default) shows the WHOLE image centred over a blurred copy of itself;
-        use fit='cover' only for wide photos/clips that can lose their edges."""
+    def bg(self, src, kb="zin", dark=0.0, fit=None, shake=False, blur=True):
+        """Full-frame background. 16:9 default fit='contain': the WHOLE image centred over a blurred copy of itself
+        (protection padding, nothing bleeds off). 9:16 default fit='cover': the image fills the phone screen.
+        Pass fit explicitly to override either."""
+        if fit is None: fit = "cover" if self.portrait else "contain"
         return dict(src=self._src(src), kb=kb, dark=dark, fit=fit, shake=shake, blur=blur)
     def clip(self, name, kb="zin", dark=0.0, fit="contain"): return dict(src=f"gifs/{name}.gif", kb=kb, dark=dark, fit=fit)
 
@@ -124,7 +127,7 @@ class Timeline:
                 if src and not src.startswith("gifs/") and i not in used.setdefault(src, []): used[src].append(i)
         # a continuation (same image in the very next shot, different move) is fine; a comeback later is not
         reused = {k: v for k, v in used.items() if any(b - a > 1 for a, b in zip(v, v[1:]))}
-        print(f"timeline: {len(self.S)} shots, {self.end}s, word slams {100 * text_t / self.end:.0f}% of runtime (aim ≤10%)")
+        print(f"timeline: {'9:16 full-bleed' if self.portrait else '16:9 protected'}, {len(self.S)} shots, {self.end}s, word slams {100 * text_t / self.end:.0f}% of runtime (aim ≤10%)")
         if reused: print("  REUSED images:", {k.split('/')[-1]: v for k, v in reused.items()})
         if long: print("  shots over 8 s:", long)
         if self.missing: print("  MISSING anchors:", self.missing)
