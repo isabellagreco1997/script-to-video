@@ -49,6 +49,26 @@ This is for people, not for a model. A person watching has one question every se
 
 Write for the ear: short sentences, one idea each, numbers as words, no parentheses. Spell out things the voice will fluff (`C L I`, `G P U`). Keep the tone dry and specific; a joke must survive with no music under it. End with the thesis, then stop. 150 words ≈ 1 minute.
 
+## 1a. Retention (the shape that keeps people watching)
+
+YouTube tests every upload on a small audience first; if early retention is poor the test stops. The steepest drop in almost every retention curve is between second 10 and 20, and 20 to 35% of viewers are gone by second 30. So the opening is not an intro, it is the gate. Rules, in order:
+
+**The first 30 seconds**
+1. **0 to 5 s: result first.** Open on the finished thing (the game running, the render done, the number on screen), not the title card, not the history, not "hey guys". A cold open of the best moment works the same way.
+2. **5 to 15 s: the specific promise.** One concrete claim with a number or a name in it: "it took thirteen tries to make her walk" beats "there were some problems". Count the specifics in the first 15 seconds; fewer than three is a weak hook, four or more is strong.
+3. **15 to 30 s: the open loop.** Plant one question the body will close (the fail you'll explain, the thing that broke). Then start.
+4. **Never:** a greeting, a logo bumper, "in this video we're going to", an apology or disclaimer, a like-and-subscribe before any value, more than 10 seconds of setup.
+
+**The rest**
+5. **Pattern interrupt every 20 to 40 seconds.** A cut, a before/after, a fail clip, a number card. A devlog's compares are made for this; a flat stretch of talking head is where the second drop happens.
+6. **Teaser at the start AND payoff at the end.** Showing the finished result only at the end makes the viewer wait the whole runtime for what the title promised. Show it in the first five seconds as proof, tell the story, then give the full tour at the end as the payoff.
+7. **Chapters.** Every beat in the shot plan is a chapter marker; skippers still count as watch time.
+8. **End on the payoff, then stop.** The link on screen and said aloud, a few seconds of the result, no outro talk.
+
+**Test the opening before recording:** read only the first 15 seconds of the script; if no specific value claim has landed, rewrite. Read it with no visuals; if it needs the b-roll to make sense, it is brittle.
+
+Sources: PrePublish, "The first 30 seconds of a YouTube video" (2025); 1of10, "How to hook viewers in the first 30 seconds" (2025); Narration Box, "Why viewers drop off after 30 seconds" (2026).
+
 ## 2. Voice
 
 `script-to-video voice script.txt work/narration.wav --voice am_puck` (male) / `af_bella` (female). Kokoro is free, local, MIT. **Tempo is part of the edit**: the dead air Kokoro leaves before and after every sentence is trimmed, sentences are 0.12 s apart, paragraphs 0.30 s, speed 1.06. That is what makes the clip feel fast-paced; a picture per idea over a slow, gappy voice still drags. Loosen (`--gap 0.3 --pgap 0.6 --speed 1.0`) only for a calm, documentary read. If the user brings their own recording, run it through a silence trim too (ffmpeg `silenceremove`, or cut the gaps in the timeline by shot). Normalised to −1 dB. Listen to a paragraph before committing to a voice. If the user has their own recording, use that instead, the pipeline doesn't care.
