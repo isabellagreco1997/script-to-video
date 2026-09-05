@@ -11,9 +11,12 @@ It also ships as a **Claude Code skill** (`SKILL.md`): drop the folder in `~/.cl
     <td align="center" width="62%"><a href="https://github.com/isabellagreco1997/script-to-video/releases/download/examples-v2/how-does-a-door-work.mp4"><img src="examples/how-does-a-door-work/out/preview.gif" width="100%"></a><br><b>How does a door work</b> · 16:9 · 1:30 · <a href="https://github.com/isabellagreco1997/script-to-video/releases/download/examples-v2/how-does-a-door-work.mp4">▶ watch the full video</a><br><sub>Wikipedia images + article screenshots + diagrams drawn in code, male Kokoro voice</sub></td>
     <td align="center" width="38%"><a href="https://github.com/isabellagreco1997/script-to-video/releases/download/examples-v2/dark-souls-story-916.mp4"><img src="examples/dark-souls-story-916/out/preview.gif" width="100%"></a><br><b>The story of Dark Souls</b> · 9:16 · 0:48 · <a href="https://github.com/isabellagreco1997/script-to-video/releases/download/examples-v2/dark-souls-story-916.mp4">▶ watch the full video</a><br><sub>trailer clips + article captures + a counter, same voice</sub></td>
   </tr>
+  <tr>
+    <td align="center" colspan="2"><a href="https://github.com/isabellagreco1997/script-to-video/releases/download/examples-v2/dark-souls-the-choice-draft-v1.mp4"><img src="examples/dark-souls-the-choice/out/preview.gif" width="640" alt="Dark Souls: The Choice animated preview"></a><br><b>Dark Souls: The Choice</b> · 16:9 · 1:58 · <a href="https://github.com/isabellagreco1997/script-to-video/releases/download/examples-v2/dark-souls-the-choice-draft-v1.mp4">▶ watch the full video</a><br><sub>Made with Codex and this skill: gameplay + word-synced character reveals + explanatory diagrams, local Kokoro voice · first cut</sub><br><sub><a href="examples/dark-souls-the-choice">Script, subtitles and source credits</a></sub></td>
+  </tr>
 </table>
 
-Both full videos are on the [releases page](https://github.com/isabellagreco1997/script-to-video/releases/tag/examples-v2); the contact sheets the build writes are in each example's `out/` folder.
+All three full videos are on the [releases page](https://github.com/isabellagreco1997/script-to-video/releases/tag/examples-v2). The first two examples also include build contact sheets in their `out/` folders.
 
 ## Make it work with your agent
 
@@ -123,8 +126,9 @@ Written in full in [`SKILL.md`](SKILL.md). The short version:
 
 * [`examples/how-does-a-door-work/`](examples/how-does-a-door-work) — 16:9, 1:30. Hinge, latch, pin tumbler lock, Linus Yale. Every picture from Wikipedia/Commons with the licence in `work/attributions.txt`.
 * [`examples/dark-souls-story-916/`](examples/dark-souls-story-916) — 9:16, 0:48. Trailer clips via yt-dlp, article captures reflowed at phone width, a live counter, a "YOU DIED" card drawn in code.
+* [`examples/dark-souls-the-choice/`](examples/dark-souls-the-choice) — 16:9, 1:58. Made with Codex using this skill: 52 word-anchored shots, local Kokoro narration, gameplay, character reveals and diagrams. Includes the first-cut showcase, script, subtitles and source credits.
 
-Run either with `python examples/<name>/fetch_assets.py` then `script-to-video build examples/<name>/build.py`.
+Run the first two examples with `python examples/<name>/fetch_assets.py` then `script-to-video build examples/<name>/build.py`.
 
 ## License
 
